@@ -1,7 +1,7 @@
 // CONFIGURASI APLIKASI - SESUAIKAN DENGAN KEBUTUHAN
 const CONFIG = {
     // URL API Google Apps Script (akan dibuat kemudian)
-    API_URL: 'https://script.google.com/macros/s/AKfycbwgaDhQJmzN6q87i7JxvTzH8q5GnR4F9qLr7Iq3LzO/exec',
+    API_URL: 'https://script.google.com/macros/s/AKfycbwAMv3NrQ1yRvgmkOIyeby8QAPS7lQOkpPRYYTYaHpVPaJebDumtHW0AD6D5seGzwkg/exec',
     
     // URL untuk branding
     LOGO_URL: 'https://via.placeholder.com/150x50/00008B/ffffff?text=ABADIWIN',
@@ -22,4 +22,5 @@ const CONFIG = {
     
     // Pengaturan reminder
     REMINDER_DAYS: 7
+
 };
