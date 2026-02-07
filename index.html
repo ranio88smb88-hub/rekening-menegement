@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABADIWIN - Management Rekening Internal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/96/000000/bank-card-back-side.png">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2 class="gradient-text">Memuat Sistem ABADIWIN...</h2>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="" alt="Logo ABADIWIN" id="logoImage" class="logo">
+                <h1 class="gradient-text">ABADIWIN</h1>
+                <p class="tagline">Management Rekening Internal</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                        <span class="badge" id="dashboardBadge">0</span>
+                    </li>
+                    <li data-page="rekening">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Data Rekening</span>
+                    </li>
+                    <li data-page="validasi">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Validasi Rekening</span>
+                    </li>
+                    <li data-page="followup">
+                        <i class="fas fa-tasks"></i>
+                        <span>Follow Up</span>
+                        <span class="badge" id="followupBadge">0</span>
+                    </li>
+                    <li data-page="reminder">
+                        <i class="fas fa-bell"></i>
+                        <span>Reminder</span>
+                        <span class="badge" id="reminderBadge">0</span>
+                    </li>
+                    <li id="izinKeluar">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>Izin Keluar</span>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <div>
+                        <span class="username">Operator</span>
+                        <small class="user-role">Admin System</small>
+                    </div>
+                </div>
+                <button id="refreshData" class="btn-refresh">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 id="pageTitle">Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <div class="date-time">
+                        <span id="currentDate"></span>
+                        <span id="currentTime"></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Page -->
+                <section id="dashboardPage" class="page active">
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(0, 0, 139, 0.1);">
+                                <i class="fas fa-university" style="color: #00008B;"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalBank">0</h3>
+                                <p>Rekening Bank</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(10, 254, 255, 0.1);">
+                                <i class="fas fa-wallet" style="color: #0afeff;"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalEWallet">0</h3>
+                                <p>E-Wallet</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(255, 215, 0, 0.1);">
+                                <i class="fas fa-exclamation-triangle" style="color: #FFD700;"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalWarning">0</h3>
+                                <p>Warning Aktif</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: rgba(220, 20, 60, 0.1);">
+                                <i class="fas fa-clock" style="color: #DC143C;"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalExpired">0</h3>
+                                <p>Expired</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="card wide">
+                            <div class="card-header">
+                                <h3><i class="fas fa-bell gold-icon"></i> Reminder & Notice</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="reminderList" class="reminder-list">
+                                    <!-- Reminder items akan diisi oleh JavaScript -->
+                                    <div class="empty-state">
+                                        <i class="fas fa-check-circle"></i>
+                                        <p>Tidak ada reminder saat ini</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-chart-line gold-icon"></i> Status Masa Aktif</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="status-chart">
+                                    <div class="chart-item">
+                                        <div class="chart-bar safe"></div>
+                                        <span>Aman</span>
+                                        <strong id="countSafe">0</strong>
+                                    </div>
+                                    <div class="chart-item">
+                                        <div class="chart-bar warning"></div>
+                                        <span>Warning</span>
+                                        <strong id="countWarning">0</strong>
+                                    </div>
+                                    <div class="chart-item">
+                                        <div class="chart-bar expired"></div>
+                                        <span>Expired</span>
+                                        <strong id="countExpired">0</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-history gold-icon"></i> Recent Follow Up</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentFollowup" class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Tanggal</th>
+                                            <th>Rekening</th>
+                                            <th>Tipe</th>
+                                            <th>Status</th>
+                                            <th>Catatan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentFollowupBody">
+                                        <!-- Data akan diisi oleh JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data Rekening Page -->
+                <section id="rekeningPage" class="page">
+                    <div class="page-header">
+                        <h2><i class="fas fa-credit-card"></i> Data Rekening</h2>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="globalSearch" placeholder="Cari rekening, nomor, bank, atau status...">
+                        </div>
+                    </div>
+
+                    <div class="filters">
+                        <select id="filterType">
+                            <option value="">Semua Tipe</option>
+                            <option value="bank">Bank</option>
+                            <option value="ewallet">E-Wallet</option>
+                        </select>
+                        <select id="filterStatus">
+                            <option value="">Semua Status</option>
+                            <option value="active">Aktif</option>
+                            <option value="warning">Warning</option>
+                            <option value="expired">Expired</option>
+                            <option value="off">Off</option>
+                        </select>
+                        <select id="filterSheet">
+                            <option value="">Semua Sheet</option>
+                        </select>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="rekeningTable">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Rekening</th>
+                                            <th>Nomor</th>
+                                            <th>Tipe</th>
+                                            <th>Bank/Provider</th>
+                                            <th>Masa Aktif</th>
+                                            <th>Status</th>
+                                            <th>Sumber Data</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rekeningTableBody">
+                                        <!-- Data akan diisi oleh JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Validasi Rekening Page -->
+                <section id="validasiPage" class="page">
+                    <div class="page-header">
+                        <h2><i class="fas fa-check-circle"></i> Validasi Nama Rekening</h2>
+                        <p class="page-subtitle">Validasi berdasarkan masking seperti sistem bank/fintech</p>
+                    </div>
+
+                    <div class="validation-container">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-user-check gold-icon"></i> Form Validasi</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="maskedName">
+                                        <i class="fas fa-mask"></i> Masked Name
+                                        <small>(Contoh: "saxxx kuxxxx")</small>
+                                    </label>
+                                    <input type="text" id="maskedName" placeholder="Masukkan masked name...">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="inputName">
+                                        <i class="fas fa-user"></i> Input Name
+                                        <small>(Contoh: "sandi kusuma")</small>
+                                    </label>
+                                    <input type="text" id="inputName" placeholder="Masukkan nama lengkap...">
+                                </div>
+                                
+                                <button id="validateButton" class="btn-primary">
+                                    <i class="fas fa-check"></i> Validasi Sekarang
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-clipboard-check gold-icon"></i> Hasil Validasi</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="validationResult" class="validation-result">
+                                    <div class="result-header">
+                                        <div class="status-indicator" id="statusIndicator">
+                                            <i class="fas fa-question-circle"></i>
+                                            <span>Menunggu Validasi</span>
+                                        </div>
+                                        <div class="score-display" id="scoreDisplay">
+                                            -/4
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="result-details">
+                                        <div class="rule-check">
+                                            <i class="fas fa-check-circle valid"></i>
+                                            <span>Jumlah Kata Sama</span>
+                                            <span class="rule-status" id="rule1Status">-</span>
+                                        </div>
+                                        <div class="rule-check">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Awalan Huruf Sama</span>
+                                            <span class="rule-status" id="rule2Status">-</span>
+                                        </div>
+                                        <div class="rule-check">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Total Panjang Huruf Sama</span>
+                                            <span class="rule-status" id="rule3Status">-</span>
+                                        </div>
+                                        <div class="rule-check">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Tidak Ada Selisih Huruf</span>
+                                            <span class="rule-status" id="rule4Status">-</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="validationMessage" class="validation-message">
+                                        Masukkan masked name dan input name untuk memulai validasi
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-info-circle gold-icon"></i> Panduan Validasi</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="guide-container">
+                                <div class="guide-item">
+                                    <div class="guide-icon">
+                                        <i class="fas fa-list-ol"></i>
+                                    </div>
+                                    <div class="guide-content">
+                                        <h4>1. Jumlah Kata Harus Sama</h4>
+                                        <p>Masked: "saxxx kuxxxx" (2 kata)<br>
+                                        Input: "sandi kusuma" (2 kata) → VALID</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="guide-item">
+                                    <div class="guide-icon">
+                                        <i class="fas fa-font"></i>
+                                    </div>
+                                    <div class="guide-content">
+                                        <h4>2. Awalan Huruf Harus Sama</h4>
+                                        <p>Masked: "saxxx" → awalan "sa"<br>
+                                        Input: "sandi" → awalan "sa" → VALID</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="guide-item">
+                                    <div class="guide-icon">
+                                        <i class="fas fa-ruler"></i>
+                                    </div>
+                                    <div class="guide-content">
+                                        <h4>3. Total Panjang Huruf Sama</h4>
+                                        <p>Masked: "saxxx" = 5 karakter<br>
+                                        Input: "sandi" = 5 karakter → VALID</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="guide-item">
+                                    <div class="guide-icon">
+                                        <i class="fas fa-times-circle"></i>
+                                    </div>
+                                    <div class="guide-content">
+                                        <h4>4. Tidak Boleh Ada Selisih</h4>
+                                        <p>Masked: "saxx" = 4 karakter<br>
+                                        Input: "sandi" = 5 karakter → TIDAK VALID</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Follow Up Page -->
+                <section id="followupPage" class="page">
+                    <div class="page-header">
+                        <h2><i class="fas fa-tasks"></i> Follow Up Rekening</h2>
+                    </div>
+
+                    <div class="followup-actions">
+                        <div class="action-card" data-action="bulan-depan">
+                            <div class="action-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h3>Follow Up Bulan Depan</h3>
+                            <p>Jadwalkan follow up untuk bulan depan</p>
+                            <span class="action-badge" id="followupNextMonth">0</span>
+                        </div>
+                        
+                        <div class="action-card" data-action="cabut-kas">
+                            <div class="action-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <h3>Dicabut dari Kas 1</h3>
+                            <p>Pindahkan ke sheet cabut kas</p>
+                            <span class="action-badge" id="followupCabutKas">0</span>
+                        </div>
+                        
+                        <div class="action-card" data-action="off">
+                            <div class="action-icon">
+                                <i class="fas fa-power-off"></i>
+                            </div>
+                            <h3>Rekening Di-Offkan</h3>
+                            <p>Nonaktifkan rekening</p>
+                            <span class="action-badge" id="followupOff">0</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-history gold-icon"></i> Riwayat Follow Up</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="followupHistoryTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Tanggal</th>
+                                            <th>Rekening</th>
+                                            <th>Tipe Follow Up</th>
+                                            <th>Status</th>
+                                            <th>Catatan</th>
+                                            <th>Operator</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="followupHistoryBody">
+                                        <!-- Data akan diisi oleh JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reminder Page -->
+                <section id="reminderPage" class="page">
+                    <div class="page-header">
+                        <h2><i class="fas fa-bell"></i> Reminder & Notice</h2>
+                    </div>
+
+                    <div class="reminder-cards">
+                        <!-- Reminder cards akan diisi oleh JavaScript -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal untuk Follow Up -->
+    <div id="followupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Follow Up Rekening</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="selectedAccount">
+                        <i class="fas fa-credit-card"></i> Rekening
+                    </label>
+                    <input type="text" id="selectedAccount" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="followupType">
+                        <i class="fas fa-tasks"></i> Tipe Follow Up
+                    </label>
+                    <select id="followupType">
+                        <option value="bulan_depan">Follow Up Bulan Depan</option>
+                        <option value="cabut_kas">Dicabut dari Kas 1</option>
+                        <option value="off">Rekening Di-Offkan</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="followupNotes">
+                        <i class="fas fa-sticky-note"></i> Catatan
+                    </label>
+                    <textarea id="followupNotes" rows="4" placeholder="Masukkan catatan follow up..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button id="submitFollowup" class="btn-primary">
+                        <i class="fas fa-save"></i> Simpan Follow Up
+                    </button>
+                    <button class="btn-secondary modal-close">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
